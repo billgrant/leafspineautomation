@@ -1,0 +1,7 @@
+---
+
+bgp:
+  as: 65000
+  distance: 20 200 200
+  maxpaths: 4
+  maxroutes: 64

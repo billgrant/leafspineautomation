@@ -11,18 +11,13 @@ class ConfigureLeafSpine():
             self,
             hosts,
             groups,
-            baseconfig,
-            spines,
-            spineconfig,
+            baseconfig
             ):
         with open(hosts) as file1:
             self.hosts = yaml.load(file1)
         with open(groups) as file2:
             self.groups = yaml.load(file2)
-        with open(spines) as file3:
-            self.spines = yaml.load(file3)
         self.baseconfig = baseconfig
-        self.spineconfig = spineconfig
         self.ENV = Environment(loader=FileSystemLoader('.'))
 
     def generatebaseconfig(self):
@@ -39,27 +34,11 @@ class ConfigureLeafSpine():
             with open(filename, 'w') as file:
                 file.writelines(config)
 
-    def generatespineconfig(self):
-        """Generates the spine configuration"""
-        template = self.ENV.get_template(self.spineconfig)
-        for key, value in self.hosts.items():
-            if value['role'] == 'spine':
-                config = template.render(
-                    host=value,
-                    bgp=self.spines['bgp']
-                    )
-                filename = 'configs/{0}.config'.format(key)
-                with open(filename, 'w') as file:
-                    file.writelines(config)
-
 
 if __name__ == "__main__":
     lsconfig = ConfigureLeafSpine(
         'hosts.yaml',
         'groups.yaml',
-        'baseconfig.j2',
-        'spine.yaml',
-        'spine.j2'
+        'baseconfig.j2'
     )
     lsconfig.generatebaseconfig()
-    lsconfig.generatespineconfig()
