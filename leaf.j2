@@ -1,0 +1,69 @@
+ip routing
+!
+lldp run
+!
+{% for vlan in vlans -%}
+vlan {{ vlan.number }}
+  name {{ vlan.description }}
+!
+{% endfor -%}
+{% for interface in host.interfaces -%}
+interface Ethernet{{ interface.number }}
+  description {{ interface.description }}
+  logging event link-status
+  no switchport
+  ip address {{ interface.ip }}
+  arp timeout 900
+  mtu 9214
+  no shutdown
+!
+{% endfor -%}
+{% for loopback in host.loopbacks -%}
+interface loopback{{ loopback.number }}
+  ip address {{ loopback.ip }}
+!
+{% endfor -%}
+{% for vlaninterface in host.vlaninterfaces -%}
+interface Vlan{{ vlaninterface.number }}
+  description {{ vlaninterface.description }}
+  {% if vlaninterface.mtu -%}
+  mtu {{ vlaninterface.mtu }}
+  {% endif -%}
+  ip address {{ vlaninterface.ip }}
+  arp timeout 900
+  no shutdown
+!
+{% endfor -%}
+{% for routemap in routemaps -%}
+route-map {{ routemap.name }} {{ routemap.filter }} 10
+{% if routemap.action == 'matchip' -%}
+  match ip address {{ routemap.type }} {{ routemap.actionname }}
+{% endif -%}
+!
+{% endfor -%}
+{% for prefixlist in host.prefixlists -%}
+ip prefix-list {{ prefixlist.name }} seq {{ prefixlist.sequence }} {{ prefixlist.action }} {{ prefixlist.ip }}
+{% endfor -%}
+!
+router bgp {{ bgp.as }}
+  bgp log-neighbor-changes
+  distance bgp {{ bgp.distance }}
+  maximum-paths {{ bgp.maxpaths }} ecmp {{ bgp.maxroutes }}
+  {% for peergroup in host.peergroups -%}
+  neighbor {{ peergroup.name}} peer-group
+  neighbor {{ peergroup.name }} remote-as {{ peergroup.remoteas }}
+  neighbor {{ peergroup.name }} maximum-routes {{ peergroup.maxroutes }}
+  neighbor {{ peergroup.name }} allowas-in {{ peergroup.allowasin }}
+  {% for routemap in peergroup.routemap -%}
+  neighbor {{ peergroup.name }} route-map {{ routemap.name }} {{ routemap.direction }}
+  {% endfor -%}
+  {% for neighbor in peergroup.neighbors -%}
+  neighbor {{ neighbor }} peer-group {{ peergroup.name }}
+  {% endfor -%}
+  {% endfor -%}
+  {% for network in host.bgpnetworks -%}
+  network {{ network }}
+  {% endfor -%}
+  redistribute {{ bgp.redistribute }}
+!
+end

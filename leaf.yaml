@@ -1,0 +1,22 @@
+---
+
+vlans:
+  - number: 100
+    description: Servers1
+  - number: 200
+    description: Servers2
+
+routemaps:
+  - name: ROUTE-MAP-OUT
+    filter: permit
+    sequence: 10
+    action: matchip
+    type: prefix-list
+    actionname: PREFIX-LIST-OUT
+
+bgp:
+  as: 65100
+  distance: 20 200 200
+  maxpaths: 4
+  maxroutes: 4
+  redistribute: connected
