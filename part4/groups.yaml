@@ -1,0 +1,19 @@
+---
+
+defaults:
+  domain: example.net
+  ntpserver1: 0.pool.ntp.org
+  ntpserver2: 1.pool.ntp.org
+  nameserver1: 8.8.8.8
+  nameserver2: 8.8.4.4
+  domainname: example.net
+  username: admin
+  password: admin
+
+ny:
+  timezone: America/New_York
+
+arista_eos:
+  nos: eos
+  iprouting: True
+  lldp: True

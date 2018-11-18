@@ -23,6 +23,15 @@ interface loopback{{ loopback.number }}
   ip address {{ loopback.ip }}
 !
 {% endfor -%}
+{% for accessinterface in accessinterfaces -%}
+interface Ethernet{{ accessinterface.number }}
+  switchport access vlan {{ accessinterface.vlan }}
+  no snmp trap link-status
+  spanning-tree portfast
+  spanning-tree bpduguard enable
+  no shutdown
+!
+{% endfor -%}
 {% for vlaninterface in host.vlaninterfaces -%}
 interface Vlan{{ vlaninterface.number }}
   description {{ vlaninterface.description }}

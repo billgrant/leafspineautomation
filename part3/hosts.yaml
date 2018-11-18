@@ -140,6 +140,7 @@ leaf-2:
     - name: PREFIX-LIST-OUT
       action: permit
       sequence: 30
+      ip: 10.2.100.0/24    
   vlaninterfaces:
     - number: 100
       description: Servers1

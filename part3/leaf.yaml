@@ -3,8 +3,12 @@
 vlans:
   - number: 100
     description: Servers1
-  - number: 200
-    description: Servers2
+
+accessinterfaces:
+  - number: 9
+    switchport: access
+    vlan: 100
+  - number: 10
 
 routemaps:
   - name: ROUTE-MAP-OUT

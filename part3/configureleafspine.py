@@ -65,6 +65,7 @@ class ConfigureLeafSpine():
                 config = template.render(
                     host=value,
                     vlans=self.leafs['vlans'],
+                    accessinterfaces=self.leafs['accessinterfaces'],
                     routemaps=self.leafs['routemaps'],
                     bgp=self.leafs['bgp']
                     )
