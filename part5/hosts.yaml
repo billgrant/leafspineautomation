@@ -1,0 +1,164 @@
+---
+
+spine-1:
+  managementip: 198.51.100.254/24
+  managementgw: 198.51.100.1
+  site: ny
+  role: spine
+  interfaces:
+    - number: 1
+      ip: 172.16.0.1/30
+      description: P2P Link to Leaf-1
+    - number: 2
+      ip: 172.16.0.5/30
+      description: P2P Link to Leaf-2
+  loopbacks:
+    - number: 0
+      ip: 192.168.0.1/32
+  routerid: 192.168.0.1
+  bgpnetworks:
+    - 192.168.0.1/32
+  peergroups:
+    - name: EBGP-TO-LEAF
+      maxroutes: 12000
+      remoteas: 65100
+      neighbors:
+        - 172.16.0.2
+        - 172.16.0.6  
+spine-2:
+  managementip: 198.51.100.253/24
+  managementgw: 198.51.100.1
+  site: ny
+  role: spine
+  interfaces:
+    - number: 1
+      ip: 172.16.0.9/30
+      description: P2P Link to Leaf-1
+    - number: 2
+      ip: 172.16.0.13/30
+      description: P2P Link to Leaf-2
+  loopbacks:
+    - number: 0
+      ip: 192.168.0.2/32
+  routerid: 192.168.0.2
+  bgpnetworks:
+    - 192.168.0.2/32
+  peergroups:
+    - name: EBGP-TO-LEAF
+      maxroutes: 12000
+      remoteas: 65100
+      neighbors:
+       - 172.16.0.10
+       - 172.16.0.14
+leaf-1:
+  managementip: 198.51.100.252/24
+  managementgw: 198.51.100.1
+  site: ny
+  role: leaf
+  interfaces:
+    - number: 1
+      ip: 172.16.0.2/30
+      description: P2P Link to Spine-1
+    - number: 2
+      ip: 172.16.0.10/30
+      description: P2P Link to Spine-2
+  loopbacks:
+    - number: 0
+      ip: 192.168.0.3/32
+  routerid: 192.168.0.3
+  bgpnetworks:
+    - 192.168.0.3/32
+  peergroups:
+    - name: EBGP-TO-SPINE
+      maxroutes: 12000
+      remoteas: 65000
+      neighbors:
+        - 172.16.0.1
+        - 172.16.0.9
+      allowasin: 1
+      routemaps:
+        - name: ROUTE-MAP-OUT
+          direction: out
+  prefixlists:
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 10
+      ip: 192.168.0.3/32
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 20
+      ip: 172.16.0.0/16
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 30
+      ip: 10.1.100.0/24
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 40
+      ip: 10.1.200.0/24
+  vlaninterfaces:
+    - number: 100
+      description: Servers1
+      mtu: 9214
+      ip: 10.1.100.1/24
+      arptimeout: 900
+    - number: 200
+      description: Servers2
+      ip: 10.1.200.1/24
+      arptimeout: 900
+leaf-2:
+  managementip: 198.51.100.251/24
+  managementgw: 198.51.100.1
+  site: ny
+  role: leaf
+  interfaces:
+    - number: 1
+      ip: 172.16.0.6/30
+      description: P2P Link to Spine-1
+    - number: 2
+      ip: 172.16.0.14/30
+      description: P2P Link to Spine-2
+  loopbacks:
+    - number: 0
+      ip: 192.168.0.4/32
+  routerid: 192.168.0.6
+  bgpnetworks:
+    - 192.168.0.4/32
+  peergroups:
+    - name: EBGP-TO-SPINE
+      maxroutes: 12000
+      remoteas: 65000
+      neighbors:
+        - 172.16.0.5
+        - 172.16.0.13
+      allowasin: 1
+  routemaps:
+    - name: ROUTE-MAP-OUT
+      direction: out
+  prefixlists:
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 10
+      ip: 192.168.0.4/32
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 20
+      ip: 172.16.0.0/16
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 30
+      ip: 10.2.100.0/24
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 40
+      ip: 10.2.200.0/24
+  vlaninterfaces:
+    - number: 100
+      description: Servers1
+      mtu: 9214
+      ip: 10.2.100.1/24
+      arptimeout: 900
+    - number: 200
+      description: Servers2
+      ip: 10.2.200.1/24
+      arptimeout: 900
