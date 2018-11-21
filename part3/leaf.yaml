@@ -8,7 +8,6 @@ accessinterfaces:
   - number: 9
     switchport: access
     vlan: 100
-  - number: 10
 
 routemaps:
   - name: ROUTE-MAP-OUT

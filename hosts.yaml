@@ -92,13 +92,20 @@ leaf-1:
       action: permit
       sequence: 30
       ip: 10.1.100.0/24
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 40
+      ip: 10.1.200.0/24
   vlaninterfaces:
     - number: 100
       description: Servers1
       mtu: 9214
       ip: 10.1.100.1/24
       arptimeout: 900
-
+    - number: 200
+      description: Servers2
+      ip: 10.1.200.1/24
+      arptimeout: 900
 leaf-2:
   managementip: 198.51.100.251/24
   managementgw: 198.51.100.1
@@ -140,10 +147,18 @@ leaf-2:
     - name: PREFIX-LIST-OUT
       action: permit
       sequence: 30
-      ip: 10.2.100.0/24 
+      ip: 10.2.100.0/24
+    - name: PREFIX-LIST-OUT
+      action: permit
+      sequence: 40
+      ip: 10.2.200.0/24
   vlaninterfaces:
     - number: 100
       description: Servers1
       mtu: 9214
       ip: 10.2.100.1/24
+      arptimeout: 900
+    - number: 200
+      description: Servers2
+      ip: 10.2.200.1/24
       arptimeout: 900
